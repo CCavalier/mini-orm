@@ -1,0 +1,81 @@
+package persistence.test;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import persistence.PersistenceConfiguration;
+import persistence.PersistenceException;
+import persistence.PersistenceUtil;
+import persistence.PersistentClass;
+import persistence.PersistentProperty;
+
+public class TestConfiguration extends TestCase {
+	
+	private static final String CREATE_EXPECTED = "CREATE table book(price DECIMAL(10,2),id BIGINT GENERATED ALWAYS AS IDENTITY,title VARCHAR(255))";
+	private static final String DROP_EXPECTED = "DROP table book";
+	private static final String INSERT_EXPECTED = "INSERT into book(price,id,title)values (?,?,?)";
+	private static final String UPDATE_EXPECTED = "UPDATE book set price= ?, id= ?, title= ?, where id = ?";
+	private static final String SELECT1_EXPECTED = "SELECT * from book where title = ?";
+	private static final String SELECT2_EXPECTED = "SELECT * from book where id = ?";
+	private static final String SELECT_ALL_EXPECTED = "SELECT * from book";
+	
+	
+	private PersistenceConfiguration configuration;
+
+	@Before
+	public void setUp() throws PersistenceException {
+		configuration = PersistenceUtil.getConfiguration();
+	}
+
+	@Test
+	public void testConfiguration() throws Exception {
+//		for (PersistentClass pc : configuration.getPersistentClasses()) {
+//			System.out.println("--------------------------");
+//			System.out.println(pc.getName());
+//			System.out.println(pc.getTableName());
+//			for (PersistentProperty property : pc.getPersistentProperties()) {
+//				System.out.println(property.getName());
+//				System.out.println(property.getColumnName());
+//				System.out.println(property.getClazz());
+//				System.out.println(property.getSqlType());
+//				System.out.println(property.getColumnName());
+//			}
+//			System.out.println("--------------------------");
+//		}
+
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		assertNotNull(pcb);
+		assertEquals(pcb.getTableName(), "book");
+		PersistentProperty ppb = pcb.getPersistentProperty("id");
+		assertTrue(ppb.isId());
+		assertEquals(ppb, pcb.getId());
+		ppb = pcb.getPersistentProperty("title");
+		assertNotNull(ppb);
+		assertEquals(ppb.getColumnName(), "title");
+		assertEquals(ppb.getSqlType(), "VARCHAR(255)");
+
+		/*
+		 * create table book(id BIGINT GENERATED ALWAYS AS IDENTITY,title
+		 * VARCHAR(255),price DECIMAL(10,2),category_id BIGINT) drop table book
+		 * insert into book(title,price,category_id) values (?,?,?) update book
+		 * set title=?,price=?,category_id=? where id = ? select * from book
+		 * where title = ? select * from book where id = ? select * from book
+		 */
+		String createTest = pcb.getCreateTableStatement();
+		assertEquals(CREATE_EXPECTED, createTest);
+		String dropTest = pcb.getDropTableStatement();
+		assertEquals(DROP_EXPECTED, dropTest);
+		String insertTest = pcb.getInsertStatement();
+		assertEquals(INSERT_EXPECTED, insertTest);
+		String updateTest = pcb.getUpdateStatement();
+		assertEquals(UPDATE_EXPECTED, updateTest);
+		String select1Test = pcb.getSelectByPropertyStatement(pcb.getPersistentProperty("title"));
+		assertEquals(SELECT1_EXPECTED, select1Test);
+		String select2Test = pcb.getSelectByIdStatement();
+		assertEquals(SELECT2_EXPECTED, select2Test);
+		String selectAlTest = pcb.getSelectAllStatement();
+		assertEquals(SELECT_ALL_EXPECTED, selectAlTest);
+	}
+}

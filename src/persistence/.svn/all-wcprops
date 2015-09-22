@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence
+END
+PersistenceException.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ccavalier_miniorm/!svn/ver/10/MiniORM/src/persistence/PersistenceException.java
+END
+Table.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/Table.java
+END
+PersistentProperty.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/PersistentProperty.java
+END
+ManyToOne.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/ManyToOne.java
+END
+Transient.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/Transient.java
+END
+C3P0Configuration.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ccavalier_miniorm/!svn/ver/12/MiniORM/src/persistence/C3P0Configuration.java
+END
+PersistenceUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ccavalier_miniorm/!svn/ver/6/MiniORM/src/persistence/PersistenceUtil.java
+END
+PersistentClass.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ccavalier_miniorm/!svn/ver/7/MiniORM/src/persistence/PersistentClass.java
+END
+OneToMany.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/OneToMany.java
+END
+Id.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/Id.java
+END
+ConnectionConfiguration.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ccavalier_miniorm/!svn/ver/12/MiniORM/src/persistence/ConnectionConfiguration.java
+END
+PersistenceConfiguration.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ccavalier_miniorm/!svn/ver/12/MiniORM/src/persistence/PersistenceConfiguration.java
+END
+PersistenceSession.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/PersistenceSession.java
+END
+Column.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/ccavalier_miniorm/!svn/ver/5/MiniORM/src/persistence/Column.java
+END
+PersistenceSessionFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccavalier_miniorm/!svn/ver/10/MiniORM/src/persistence/PersistenceSessionFactory.java
+END

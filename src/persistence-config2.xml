@@ -1,0 +1,20 @@
+<persistence-configuration>
+  <connection>
+    <driver-class>org.apache.derby.jdbc.ClientDriver</driver-class>
+    <url>jdbc:derby://localhost/bookstore;create=true</url>
+    <username>bookstore</username>
+    <password>bookstore</password>
+    <c3p0>
+      <min-size>5</min-size>
+      <max-size>10</max-size>
+      <timeout>1000</timeout>
+      <max-statements></max-statements>
+    </c3p0>
+  </connection>
+  <mapped-classes>
+    <mapped-class
+      name="galland.bookstore.model.Book" />
+    <mapped-class
+      name="galland.bookstore.model.Category" />
+  </mapped-classes>
+</persistence-configuration>

@@ -1,0 +1,175 @@
+package persistence;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import persistence.criteria.Criteria;
+import persistence.query.Query;
+import persistence.query.QueryException;
+import persistence.query.QueryKeyword;
+
+public class PersistenceSession {
+
+	private PersistenceSessionFactory factory;
+	private Connection connection;
+	private static Logger log = LoggerFactory
+			.getLogger(PersistenceSession.class);
+
+	public PersistenceSession(PersistenceSessionFactory aFactory) throws PersistenceException {
+		factory = aFactory;
+		open();
+	}
+
+	public void open() throws PersistenceException {
+		ConnectionConfiguration configuration = getFactory().getPersistenceConfiguration().getConnectionConfiguration();
+		try {
+			Class.forName(configuration.getDriverClass());
+
+			Connection conn = DriverManager.getConnection(
+					configuration.getUrl(), configuration.getUserName(),
+					configuration.getPassword());
+			setConnection(conn);
+			for (SQLWarning warn = conn.getWarnings(); warn != null; warn = warn
+					.getNextWarning()) {
+				log.error("SQL Warning:");
+				log.error("	State  : " + warn.getSQLState());
+				log.error("	Message: " + warn.getMessage());
+				log.error("	Error  : " + warn.getErrorCode());
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+			throw new PersistenceException(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage());
+			throw new PersistenceException(e.getMessage());
+		}
+	}
+
+	public void save(Object bean) throws PersistenceException {
+		PersistenceConfiguration configuration = getFactory().getPersistenceConfiguration();
+		PersistentClass persistentClass = configuration.getPersistentClass(bean.getClass());
+		if (persistentClass == null) {
+			String errorMessage = bean.getClass().getName()+ " is not a managed class";
+			log.error(errorMessage);
+			throw new PersistenceException(errorMessage);
+		}
+		String insertQuery = persistentClass.getInsertStatement();
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(insertQuery);
+			int i = 1;
+			for (PersistentProperty aProperty : persistentClass.getPersistentProperties()) {
+				if (aProperty.isId())
+					continue;
+				Object o = aProperty.getValue(bean);
+				if (o == null)
+					statement.setNull(i, Types.BIGINT);
+				else
+					statement.setObject(i, o);
+				i++;
+			}
+			boolean executionStatus = statement.execute();
+			if (executionStatus == false) {
+				String errorMessage = "Un probleme est survenue lors de l'execution de la requete";
+				log.error(errorMessage);
+				throw new PersistenceException(errorMessage);
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+			throw new PersistenceException(e.getMessage());
+		}
+	}
+	
+	public Object get(Class<?> objectClass, Object value) throws PersistenceException {
+		PersistenceConfiguration configuration = getFactory().getPersistenceConfiguration();
+		PersistentClass persistentClass = configuration.getPersistentClass(objectClass);
+		if (persistentClass == null) {
+			String errorMessage = objectClass.getName()+ " is not a managed class";
+			log.error(errorMessage);
+			throw new PersistenceException(errorMessage);
+		}
+		String selectQuery = persistentClass.getSelectByIdStatement();
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(selectQuery);
+			for (PersistentProperty aProperty : persistentClass.getPersistentProperties()) {
+				if (aProperty.isId()) {
+					statement.setObject(1, value);
+				}
+			}
+			ResultSet result = statement.executeQuery();
+			if (result.next() == false) {
+				String errorMessage = "L'id ne correspond a aucun objet stocke en base";
+				log.error(errorMessage);
+				throw new PersistenceException(errorMessage);
+			}
+			Object newInstance = persistentClass.createInstance();
+			for (PersistentProperty aProperty : persistentClass.getPersistentProperties()) {
+				aProperty.setValue(newInstance, result.getObject(aProperty.getColumnName()));
+			}
+			return newInstance;
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+			throw new PersistenceException(e.getMessage());
+		}
+	}
+
+	public void close() throws PersistenceException {
+		try {
+			if (getConnection() != null && !getConnection().isClosed()) {
+				getConnection().close();
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+			throw new PersistenceException(e.getMessage());
+		}
+	}
+
+	public PersistenceSessionFactory getFactory() {
+		return factory;
+	}
+
+	public void setFactory(PersistenceSessionFactory factory) {
+		this.factory = factory;
+	}
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+	
+	/*wtf a refaire!!*/
+	public List query(Class clazz, String sql) throws SQLException{
+		PreparedStatement ps= connection.prepareStatement(sql);
+		ResultSet retSet= ps.executeQuery();
+		retSet.beforeFirst();
+		
+		ArrayList rList = new ArrayList();
+		while(retSet.next()){
+			rList.add(retSet.getObject(retSet.getRow()));
+		}
+		
+		return rList;
+		
+	}
+	
+	public Query createQuery(String pql) throws QueryException {
+		return new Query();
+	}
+	
+	public Criteria createCriteria(PersistentClass persistentClass) throws SQLException {
+		return new Criteria(persistentClass, getConnection());
+	}
+
+}

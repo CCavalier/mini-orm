@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test
+END
+TestPersistentClass.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ccavalier_miniorm/!svn/ver/8/MiniORM/src/persistence/test/TestPersistentClass.java
+END
+Category.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ccavalier_miniorm/!svn/ver/11/MiniORM/src/persistence/test/Category.java
+END
+TestProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test/TestProxy.java
+END
+Book.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test/Book.java
+END
+persistence-config-test.xml
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/test/persistence-config-test.xml
+END
+TestPqlParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/test/TestPqlParser.java
+END
+TestLazyLoading.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test/TestLazyLoading.java
+END
+TestSession.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test/TestSession.java
+END
+TestConfiguration.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/test/TestConfiguration.java
+END
+persistence-config-test2.xml
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/test/persistence-config-test2.xml
+END
+AllTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ccavalier_miniorm/!svn/ver/16/MiniORM/src/persistence/test/AllTest.java
+END
+TestCriteria.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ccavalier_miniorm/!svn/ver/17/MiniORM/src/persistence/test/TestCriteria.java
+END

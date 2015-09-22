@@ -1,0 +1,214 @@
+package persistence;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class PersistentClass {
+
+	/*
+	 * Le nom complet de la classe Java La classe Java Le nom de la table
+	 * associée La liste des attributs persistants. La propriété qui sert de
+	 * clé primaire
+	 */
+
+	private Class<?> clazz;
+	private String tableName;
+	private List<PersistentProperty> persistentProperties;
+	private PersistentProperty id;
+	private String name;
+
+	public PersistentClass() {
+		persistentProperties = new ArrayList<PersistentProperty>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public List<PersistentProperty> getPersistentProperties() {
+		return persistentProperties;
+	}
+
+	public void setPersistentProperties(
+			List<PersistentProperty> persistentProperties) {
+		this.persistentProperties = persistentProperties;
+	}
+
+	public PersistentProperty getId() {
+		return id;
+	}
+
+	public void setId(PersistentProperty id) {
+		this.id = id;
+	}
+
+	public PersistentProperty getPersistentProperty(String string) {
+		Iterator<PersistentProperty> i = persistentProperties.iterator();
+		PersistentProperty temp;
+		while (i.hasNext()) {
+			temp = i.next();
+			if (temp.getName().equals(string)) {
+				return temp;
+			}
+		}
+		return null;
+	}
+
+	public void parse() throws PersistenceException {
+		try {
+			clazz = Class.forName(getName());
+		} catch (ClassNotFoundException e) {
+			throw new PersistenceException("Mapped class not found: "
+					+ getName());
+		}
+		setTableName(clazz.getSimpleName().toLowerCase()); // par defaut
+
+		// Iterer sur les méthodes get pour déterminer les attributs
+		// persistants
+		Method[] methods = clazz.getMethods();
+		for (int i = 0; i < methods.length; i++) {
+			Method method = methods[i];
+			String methodName = method.getName();
+			if (methodName.startsWith("get") // Une méthode get
+					&& method.getParameterTypes().length == 0 // Sans
+																// paramètres
+					&& method.getDeclaringClass().equals(clazz) // Non héritée
+					&& method.getAnnotation(Transient.class) == null) { // Et
+																		// non
+																		// Transient
+				PersistentProperty property = null;
+				property = new PersistentProperty(this, method);
+				addPersistentProperty(property);
+			}
+		}
+	}
+
+	private void addPersistentProperty(PersistentProperty property) {
+		this.persistentProperties.add(property);
+	}
+
+	public String getCreateTableStatement() {
+		StringBuffer sb = new StringBuffer();
+
+		sb.append("CREATE table ");
+		sb.append(this.tableName);
+		sb.append("(");
+		for (PersistentProperty pp : persistentProperties) {
+			sb.append(pp.getColumnName());
+			sb.append(" ");
+			sb.append(pp.getSqlType());
+			sb.append(",");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append(")");
+		return sb.toString();
+	}
+
+	public String getDropTableStatement() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("DROP table ");
+		sb.append(this.tableName);
+		return sb.toString();
+	}
+
+	public String getInsertStatement() {
+		// (un prepared statement avec des ? pour les valeurs colonnes)
+		// insert into book(title,price,category_id) values (?,?,?)
+		StringBuffer sb = new StringBuffer();
+		StringBuffer values = new StringBuffer();
+		sb.append("INSERT into ");
+		sb.append(this.tableName);
+		sb.append("(");
+		values.append("(");
+		for (PersistentProperty pp : persistentProperties) {
+			sb.append(pp.getColumnName());
+			sb.append(",");
+			values.append("?,");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append(")values ");
+		values.deleteCharAt(values.length() - 1);
+		values.append(")");
+		sb.append(values);
+		return sb.toString();
+	}
+
+	public String getUpdateStatement() {
+		// (avec des ? pour les valeurs des colonnes et un ? pour l'Id
+		// update book set title=?,price=?,category_id=? where id = ?
+		StringBuffer sb = new StringBuffer();
+		sb.append("UPDATE ");
+		sb.append(this.tableName);
+		sb.append(" set ");
+		for (PersistentProperty pp : persistentProperties) {
+			sb.append(pp.getColumnName());
+			sb.append("= ?, ");
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append(" where id = ?");
+		return sb.toString();
+	}
+
+	public String getSelectByIdStatement() {
+		// (avec un ? Pour l'Id)
+		// select * from book where id = ?
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * from ");
+		sb.append(this.tableName);
+		sb.append(" where id = ?");
+		return sb.toString();
+	}
+
+	public String getSelectByPropertyStatement(PersistentProperty pp) {
+		// select * from book where title = ?
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * from ");
+		sb.append(this.tableName);
+		sb.append(" where ");
+		sb.append(pp.getColumnName());
+		sb.append(" = ?");
+		return sb.toString();
+	}
+
+	public String getSelectAllStatement() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * from ");
+		sb.append(this.tableName);
+		return sb.toString();
+	}
+
+	public Object createInstance() throws PersistenceException {
+		Object created = null;
+		try {
+			created = clazz.newInstance();
+		} catch (InstantiationException e) {
+			throw new PersistenceException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		return created;
+	}
+
+}

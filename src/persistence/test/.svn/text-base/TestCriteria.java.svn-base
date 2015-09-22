@@ -1,0 +1,79 @@
+package persistence.test;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import persistence.PersistenceConfiguration;
+import persistence.PersistenceException;
+import persistence.PersistenceSessionFactory;
+import persistence.PersistenceUtil;
+import persistence.PersistentClass;
+import persistence.criteria.Criteria;
+import persistence.criteria.Restriction;
+
+public class TestCriteria extends TestCase {
+	
+	private PersistenceConfiguration configuration;
+	private PersistenceSessionFactory factory;
+
+	@Before
+	public void setUp() throws PersistenceException {
+		configuration = PersistenceUtil.getConfiguration();
+		factory = PersistenceUtil.getFactory();
+	}
+	
+	@Test
+	public void testCreateCriteria() throws PersistenceException, SQLException {
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		Connection connection = factory.openSession().getConnection();
+		String createSql = "Select * From "+pcb.getTableName();
+		Criteria aCriteria = new Criteria(pcb, connection);
+	}
+	
+	@Test
+	public void testAddRestriction() throws PersistenceException, SQLException {
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		Connection connection = factory.openSession().getConnection();
+		Criteria aCriteria = new Criteria(pcb, connection);
+		Restriction aRestriction = new Restriction(pcb.getPersistentProperty("title"), "=", new String("Test"));
+		aCriteria.add(aRestriction);
+	}
+	
+	@Test
+	public void testMultipleAddRestriction() throws PersistenceException, SQLException {
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		Connection connection = factory.openSession().getConnection();
+		Criteria aCriteria = new Criteria(pcb, connection);
+		Restriction aRestriction = new Restriction(pcb.getPersistentProperty("title"), "=", new String("Test"));
+		aCriteria.add(aRestriction);
+		Restriction aRestriction2 = new Restriction(pcb.getPersistentProperty("int"), "=", 0);
+		aCriteria.add(aRestriction2);
+	}
+	
+	@Test 
+	public void testSingleResult() throws PersistenceException, SQLException {
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		Connection connection = factory.openSession().getConnection();
+		Criteria aCriteria = new Criteria(pcb, connection);
+		Restriction aRestriction = new Restriction(pcb.getPersistentProperty("title"), "=", new String("Test"));
+		aCriteria.add(aRestriction);
+		Restriction aRestriction2 = new Restriction(pcb.getPersistentProperty("id"), "=", 0);
+		aCriteria.add(aRestriction2);
+		Book aResult = (Book) aCriteria.singleResult();
+	}
+	
+	@Test
+	public void testList() throws PersistenceException, SQLException {
+		PersistentClass pcb = configuration.getPersistentClass(Book.class);
+		Connection connection = factory.openSession().getConnection();
+		Criteria aCriteria = new Criteria(pcb, connection);
+		List<Object> result = aCriteria.list();
+	}
+
+}

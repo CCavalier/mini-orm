@@ -1,0 +1,31 @@
+package persistence.test;
+
+import static org.junit.Assert.*;
+import javassist.util.proxy.ProxyObject;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import persistence.PersistenceConfiguration;
+import persistence.PersistenceException;
+import persistence.PersistentClass;
+
+public class TestProxy {
+//	private PersistenceConfiguration configuration;
+//
+//	@Before
+//	public void setUp() throws PersistenceException {
+//		configuration = new PersistenceConfiguration(
+//				"persistence/test/persistence-config-test.xml");
+//	}
+//
+//	@Test
+//	public void testCreateProxy() throws Exception {
+//		Book b = new Book();
+//		PersistentClass pc = configuration.getPersistentClass(b.getClass());
+//		assertTrue(pc.isProxied());
+//		b = (Book) pc.createInstance();
+//		assertTrue(b instanceof ProxyObject);
+//		assertTrue(b instanceof Book);
+//	}
+}

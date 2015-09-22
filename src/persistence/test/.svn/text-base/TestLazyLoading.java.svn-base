@@ -1,0 +1,86 @@
+package persistence.test;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import persistence.PersistenceConfiguration;
+import persistence.PersistenceException;
+import persistence.PersistenceSession;
+import persistence.PersistenceSessionFactory;
+import persistence.PersistenceUtil;
+public class TestLazyLoading {
+//  private PersistenceConfiguration configuration;
+//  private PersistenceSessionFactory factory;
+//  @Before
+//  public void setUp() throws PersistenceException {
+//    configuration = new PersistenceConfiguration("persistence/test/persistence-config-test.xml");
+//    factory = new PersistenceSessionFactory(configuration);
+//  }
+//  
+//  @Test
+//  public void testDropTable() throws Exception {
+//    PersistenceSession s = factory.openSession();
+//  try {
+//      s.dropTable(Book.class);
+//    } catch (Exception e) {
+//
+//    }
+//    try {
+//      s.dropTable(Category.class);
+//    } catch (Exception e) {
+//    }
+//    s.close();
+//  }
+//
+//  @Test
+//  public void testCreateTable() throws Exception {
+//    PersistenceSession s = factory.openSession();
+//    s.createTable(Book.class);
+//    s.createTable(Category.class);
+//    s.close();
+//  }
+//
+//  @Test
+//  public void testLazy() throws Exception {
+//    PersistenceSession s = factory.openSession();
+//    Book b = new Book();
+//    b.setTitle("Java");
+//    b.setPrice(new BigDecimal("1000.35"));
+//    Category c = new Category();
+//    c.setTitle("Informatique");
+//    s.save(c);
+//    assertNotNull(c.getId());
+//    b.setCategory(c);
+//    s.save(b);
+//    assertNotNull(b.getId());
+//
+//    Book bb = (Book) s.get(Book.class, b.getId());
+//   
+//    assertEquals(b.getId(),bb.getId());
+//    assertEquals(b.getTitle(),bb.getTitle());
+//    assertEquals(b.getPrice(),bb.getPrice());
+//    
+//    Category cc = bb.getCategory();
+//    assertNotNull(cc);
+//    assertEquals(c.getId(),cc.getId());
+//    assertEquals(c.getTitle(),cc.getTitle());
+//    
+//    List<Book> books = cc.getBooks();
+//    assertNotNull(books);
+//    assertTrue(books.size() == 1);    
+//    Book bbbb= books.get(0);
+//    Category cccc = bbbb.getCategory();
+//    System.out.println(cccc.getId());
+//    System.out.println(cccc.getTitle());
+//    assertEquals(c.getId(),cccc.getId());
+//    assertEquals(c.getTitle(),cccc.getTitle());
+//    s.close();
+//  }
+}

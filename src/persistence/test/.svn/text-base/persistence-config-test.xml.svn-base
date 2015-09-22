@@ -1,0 +1,18 @@
+<persistence-configuration>
+  <connection>
+    <driver-class>com.mysql.jdbc.Driver</driver-class>
+    <url>jdbc:mysql://localhost:3306/bookstore</url>
+    <username>root</username>
+    <password></password>
+    <c3p0>
+      <min-size>5</min-size>
+      <max-size>10</max-size>
+      <timeout>1000</timeout>
+      <max-statements>50</max-statements>
+    </c3p0>
+  </connection>
+  <mapped-classes>
+    <mapped-class name="persistence.test.Book" />
+    <mapped-class name="persistence.test.Category" />
+  </mapped-classes>
+</persistence-configuration>

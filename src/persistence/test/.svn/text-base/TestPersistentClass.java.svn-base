@@ -1,0 +1,28 @@
+package persistence.test;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import persistence.PersistenceConfiguration;
+import persistence.PersistenceException;
+import persistence.PersistentClass;
+
+public class TestPersistentClass extends TestCase {
+	private PersistenceConfiguration configuration;
+
+	@Before
+	public void setUp() throws PersistenceException {
+		configuration = new PersistenceConfiguration(
+				"persistence/test/persistence-config-test.xml");
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		Book b = new Book();
+		PersistentClass pc = configuration.getPersistentClass(b.getClass());
+		Object o = pc.createInstance();
+		assertTrue(o instanceof Book);
+	}
+}

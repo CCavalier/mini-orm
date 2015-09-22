@@ -1,0 +1,48 @@
+/**
+ * 
+ */
+package persistence.test;
+
+
+import java.util.List;
+
+import persistence.Id;
+import persistence.OneToMany;
+
+/**
+ * @author dga
+ *
+ */
+public class Category {
+  private String title;
+  private Long id;
+  private List<Book> books;
+  
+  @Id
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  @OneToMany(mappedBy="category")
+  public List<Book> getBooks() {
+    return books;
+  }
+
+  public void setBooks(List<Book> books) {
+    this.books = books;
+  }
+  
+  
+}
